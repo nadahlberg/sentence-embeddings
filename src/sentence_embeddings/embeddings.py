@@ -7,7 +7,7 @@ import numpy as np
 
 
 class Embeddings:
-    def __init__(self, vectors, texts=None, labels=None, max_fit_samples=3000):
+    def __init__(self, vectors, texts=None, labels=None, max_fit_samples=10000):
         self.vectors = vectors
         self.texts = texts
         self.labels = labels
