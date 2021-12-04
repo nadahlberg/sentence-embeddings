@@ -15,5 +15,5 @@ embeddings = Embeddings(vectors, texts=texts, labels=labels)
 
 
 results = embeddings.search(vectors[:1], 100)[0]
-
+embeddings.plot_3d()
 print(results)

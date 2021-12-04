@@ -6,14 +6,12 @@ setup(
 	description='Search and visualize sentence embeddings.',
 	url='https://github.com/nadahlberg/sentence-embeddings',
 	author='Nathan Dahlberg',
-	author_email='',
+	author_email='nadahlberg@gmail.com',
 	package_dir={'': 'src'},
 	packages=['sentence_embeddings'],
 	install_requires=[
 		'faiss-cpu',
 		'sklearn',
 		'plotly',
-	],
-	classifiers=[
 	],
 )
