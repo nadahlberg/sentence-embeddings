@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='sentence-embeddings',
-    version='0.0.2',    
+    version='0.0.3',    
     description='Search and visualize sentence embeddings.',
     url='https://github.com/nadahlberg/sentence-embeddings',
     author='Nathan Dahlberg',

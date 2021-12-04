@@ -7,10 +7,11 @@ import numpy as np
 
 
 class Embeddings:
-    def __init__(self, vectors, texts=None, labels=None):
+    def __init__(self, vectors, texts=None, labels=None, max_fit_samples=3000):
         self.vectors = vectors
         self.texts = texts
         self.labels = labels
+        self.max_fit_samples = max_fit_samples
 
     def __len__(self):
         return self.vectors.shape[0]
@@ -46,15 +47,20 @@ class Embeddings:
         return self._pca_2d
 
     def _build_search_index(self):
-        print('Creating search index')
+        print('Creating search index.')
         search_index = faiss.IndexFlatL2(self.vectors.shape[1])
         search_index.add(self.vectors.astype('float32'))
         return search_index
 
     def _fit_pca(self, n):
-        print('Fitting PCA with n=%i' % n)
+        print('Fitting PCA with n=%i.' % n)
+        vectors = self.vectors
+        if len(self) > self.max_fit_samples:
+            print('The length of vectors (%i) is greater than max_fit_samples (%i).' % (len(self), self.max_fit_samples))
+            print('A random sample of %i vectors will be used to fit PCA.' % self.max_fit_samples)
+            vectors = vectors[np.random.choice(range(len(self)), self.max_fit_samples)]
         pca = PCA(n_components=n)
-        pca.fit(self.vectors)
+        pca.fit(vectors)
         return pca
 
     def search(self, query_vectors, k=1):
@@ -67,7 +73,6 @@ class Embeddings:
                 result['distance'] = D[i1][i2]
                 results[-1].append(result)
         return results
-
 
     def plot_3d(self, save_path=None, show=True, sample=None):
         vectors = self.vectors
