@@ -23,3 +23,6 @@ Install from PyPI
 Try out the demo!
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1ytaVFtLSIDzMQDqITiiezrC5QgZNzoKn)
+
+![language model embeddings](https://github.com/nadahlberg/sentence-embeddings/blob/main/images/language_model_embeddings.png?raw=true)
+![language model finetuned embeddings](https://github.com/nadahlberg/sentence-embeddings/blob/main/images/language_model_finetuned_embeddings.png?raw=true)
