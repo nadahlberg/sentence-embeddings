@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='sentence-embeddings',
-    version='0.0.1',    
+    version='0.0.2',    
     description='Search and visualize sentence embeddings.',
     url='https://github.com/nadahlberg/sentence-embeddings',
     author='Nathan Dahlberg',
@@ -13,5 +13,6 @@ setup(
         'faiss-cpu',
         'sklearn',
         'plotly',
+        'numpy',
     ],
 )

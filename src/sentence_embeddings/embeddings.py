@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 from sklearn.decomposition import PCA
 import textwrap
 import faiss
+import numpy as np
 
 
 class Embeddings:
@@ -10,6 +11,21 @@ class Embeddings:
         self.vectors = vectors
         self.texts = texts
         self.labels = labels
+
+    def __len__(self):
+        return self.vectors.shape[0]
+
+    def __getitem__(self, i):
+        result = {'index': i}
+        if self.texts is not None:
+            result['text'] = self.texts[i]
+        if self.labels is not None:
+            result['label'] = self.labels[i]
+        return result
+
+    def __iter__(self):
+        for i in range(len(self)):
+            yield self[i]
 
     @property
     def search_index(self):
@@ -36,7 +52,7 @@ class Embeddings:
         return search_index
 
     def _fit_pca(self, n):
-        print('Fitting PCA eith n=%i' % n)
+        print('Fitting PCA with n=%i' % n)
         pca = PCA(n_components=n)
         pca.fit(self.vectors)
         return pca
@@ -47,29 +63,30 @@ class Embeddings:
         for i1 in range(len(query_vectors)):
             results.append([])
             for i2 in range(k):
-                result = {
-                    'index': I[i1][i2],
-                    'distance': D[i1][i2],
-                }
-                if self.texts is not None:
-                    result['text'] = self.texts[I[i1][i2]]
-                if self.labels is not None:
-                    result['label'] = self.labels[I[i1][i2]]
-
+                result = self[I[i1][i2]]
+                result['distance'] = D[i1][i2]
                 results[-1].append(result)
         return results
 
 
-    def plot_3d(self, save_path=None, show=True):
+    def plot_3d(self, save_path=None, show=True, sample=None):
+        vectors = self.vectors
+
         if self.texts is not None:
             texts = ["<br>".join(textwrap.wrap(x)) for x in self.texts]
         else:
-            texts = [""] * len(self.texts)
+            texts = [""] * len(self)
         
-        labels = self.labels if self.labels is not None else [0] * len(self.texts)
-        label_names = list(set(labels))
+        labels = self.labels if self.labels is not None else [0] * len(self)
+        
+        if sample is not None:
+            index = np.random.choice(range(len(self)), sample)
+            vectors = vectors[index]
+            texts = [texts[i] for i in index]
+            labels = [labels[i] for i in index]
 
-        points = self.pca_3d.transform(self.vectors)
+        label_names = list(set(labels))
+        points = self.pca_3d.transform(vectors)
 
         charts = []
         for label in label_names:
