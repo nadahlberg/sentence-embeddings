@@ -1,4 +1,5 @@
-# sentence-embeddings
+# Sentence Embeddings
+A tool to search and visualize sentence embeddings.
 
 ## Setup
 Install from PyPI
@@ -17,5 +18,8 @@ Install from PyPI
     # Search
     embeddings.search(query_vectors, k=5)
 
-## How to create embeddings
+## Examples
 
+Try out the demo!
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1ytaVFtLSIDzMQDqITiiezrC5QgZNzoKn)
