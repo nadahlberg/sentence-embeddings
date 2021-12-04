@@ -12,7 +12,7 @@ setup(
 	install_requires=[
 		'faiss-cpu',
 		'sklearn',
-		'plotly'
+		'plotly',
 	],
 	classifiers=[
 	],

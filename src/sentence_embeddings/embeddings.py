@@ -2,7 +2,7 @@ from plotly.offline import plot
 import plotly.graph_objects as go
 from sklearn.decomposition import PCA
 import textwrap
-import numpy as np 
+import faiss
 
 
 class Embeddings:
@@ -10,7 +10,12 @@ class Embeddings:
 		self.vectors = vectors
 		self.texts = texts
 		self.labels = labels
-		self.search_index = None
+
+	@property
+	def search_index(self):
+		if not hasattr(self, '_search_index'):
+			self._search_index = self._build_search_index()
+		return self._search_index
 
 	@property
 	def pca_3d(self):
@@ -24,11 +29,36 @@ class Embeddings:
 			self._pca_2d = self._fit_pca(2)
 		return self._pca_2d
 
+	def _build_search_index(self):
+		print('Creating search index')
+		search_index = faiss.IndexFlatL2(self.vectors.shape[1])
+		search_index.add(self.vectors.astype('float32'))
+		return search_index
+
 	def _fit_pca(self, n):
 		print('Fitting PCA eith n=%i' % n)
 		pca = PCA(n_components=n)
 		pca.fit(self.vectors)
 		return pca
+
+	def search(self, query_vectors, k=1):
+		D, I = self.search_index.search(query_vectors.astype('float32'), k)
+		results = []
+		for i1 in range(len(query_vectors)):
+			results.append([])
+			for i2 in range(k):
+				result = {
+					'index': I[i1][i2],
+					'distance': D[i1][i2],
+				}
+				if self.texts is not None:
+					result['text'] = self.texts[I[i1][i2]]
+				if self.labels is not None:
+					result['label'] = self.labels[I[i1][i2]]
+
+				results[-1].append(result)
+		return results
+
 
 	def plot_3d(self, save_path=None, show=True):
 		if self.texts is not None:

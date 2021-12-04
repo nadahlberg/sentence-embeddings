@@ -13,4 +13,7 @@ from sentence_embeddings import Embeddings
 
 embeddings = Embeddings(vectors, texts=texts, labels=labels)
 
-embeddings.plot_3d()
+
+results = embeddings.search(vectors[:1], 100)[0]
+
+print(results)
